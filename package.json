@@ -7,16 +7,22 @@
   "author": "",
   "license": "",
   "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "swagger project test",
+    "createdb": "cd ./scripts/dynamodb && node createPredictionBotTable.js && cd ../..",
+    "loaddata": "cd ./scripts/dynamodb && node loadPredictionData.js && cd ../.."
+  },
   "dependencies": {
+    "aws-sdk": "2.263.1",
     "express": "^4.12.3",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
+    "eslint": "5.0.0",
+    "eslint-plugin-classes": "0.1.1",
+    "eslint-plugin-promise": "3.8.0",
     "should": "^7.1.0",
     "supertest": "^1.0.0"
-  },
-  "scripts": {
-    "start": "node app.js",
-    "test": "swagger project test"
   }
 }
