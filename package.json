@@ -19,9 +19,12 @@
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
+    "dynamodb-marshaler": "2.0.0",
     "eslint": "5.0.0",
     "eslint-plugin-classes": "0.1.1",
     "eslint-plugin-promise": "3.8.0",
+    "install": "0.12.1",
+    "npm": "6.1.0",
     "should": "^7.1.0",
     "supertest": "^1.0.0"
   }
