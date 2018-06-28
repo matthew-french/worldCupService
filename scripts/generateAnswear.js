@@ -2,92 +2,15 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const outFilePath = 'scripts/dataDump/matchResults.json';
 const url = 'https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json';
+const achievementsData = require('./dataDump/achievementData.json');
+const predictResultsData = require('./dataDump/predictResultsData.json');
+
+console.log(achievementsData);
+console.log(predictResultsData);
 
 const safelyParseJSON = (json) => {
     try { return JSON.parse(json); }
     catch (e) { return console.log(e); }
-};
-
-const results = {
-    winningTeam: 'germany',
-    totalReds: '19',
-    totalYellows: '19',
-    totalGoalsScored: '187',
-    totalPenaltiesAwarded: '18',
-    roundOf16: [
-        'argentina',
-        'belgium',
-        'brazil',
-        'france',
-        'germany',
-        'portugal',
-        'spain',
-        'uruguay',
-    ],
-
-};
-
-const achievementsData = {
-    totalYellows: {
-        id: 18017,
-        rep: 3000,
-    },
-    totalReds: {
-        id: 18018,
-        rep: 3000,
-    },
-    totalGoalsScored: {
-        id: 18019,
-        rep: 3000,
-    },
-    totalPenaltiesAwarded: {
-        id: 18020,
-        rep: 3000,
-    },
-    topScoringTeam: {
-        id: 18021,
-        rep: 500,
-    },
-    predictOneGroupMatch: {
-        id: 18022,
-        rep: 100,
-    },
-    predictEightGroupMatchs: {
-        id: 18023,
-        rep: 700,
-    },
-    predictSixteenGroupMatches: {
-        id: 18024,
-        rep: 900,
-    },
-    predictThirtyTwoGroupMatches: {
-        id: 18025,
-        rep: 1300,
-    },
-    predictFortyEightGroupMatches: {
-        id: 18026,
-        rep: 3000,
-    },
-    roundOf16: {
-        id: 18027,
-        rep: 300,
-    },
-    quarters: {
-        id: 18028,
-        rep: 200,
-    },
-    semis: {
-        id: 18029,
-        rep: 200,
-    },
-    final: {
-        id: 18030,
-        rep: 200,
-    },
-    winningTeam: {
-        id: 18031,
-        rep: 700,
-    },
 };
 
 const axios = require('axios');
