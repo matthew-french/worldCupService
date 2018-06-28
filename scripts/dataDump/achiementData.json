@@ -1,0 +1,62 @@
+{
+  "totalYellows": {
+    "id": 18017,
+    "rep": 3000
+  },
+  "totalReds": {
+    "id": 18018,
+    "rep": 3000
+  },
+  "totalGoalsScored": {
+    "id": 18019,
+    "rep": 3000
+  },
+  "totalPenaltiesAwarded": {
+    "id": 18020,
+    "rep": 3000
+  },
+  "topScoringTeam": {
+    "id": 18021,
+    "rep": 500
+  },
+  "predictOneGroupMatch": {
+    "id": 18022,
+    "rep": 100
+  },
+  "predictEightGroupMatchs": {
+    "id": 18023,
+    "rep": 700
+  },
+  "predictSixteenGroupMatches": {
+    "id": 18024,
+    "rep": 900
+  },
+  "predictThirtyTwoGroupMatches": {
+    "id": 18025,
+    "rep": 1300
+  },
+  "predictFortyEightGroupMatches": {
+    "id": 18026,
+    "rep": 3000
+  },
+  "roundOf16": {
+    "id": 18027,
+    "rep": 300
+  },
+  "quarters": {
+    "id": 18028,
+    "rep": 200
+  },
+  "semis": {
+    "id": 18029,
+    "rep": 200
+  },
+  "final": {
+    "id": 18030,
+    "rep": 200
+  },
+  "winningTeam": {
+    "id": 18031,
+    "rep": 700
+  }
+}

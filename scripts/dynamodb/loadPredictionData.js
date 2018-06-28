@@ -9,85 +9,45 @@ AWS.config.update({
     secretKey: 'a',
 });
 
-// var fs = require("fs");
-// console.log("\n *START* \n");
-// var content = fs.readFileSync("content.txt");
-// console.log("Output Content : \n"+ content);
-// console.log("\n *EXIT* \n");
-
 const docClient = new AWS.DynamoDB.DocumentClient();
-console.log('Importing Cars into DynamoDB. Please wait.');
-const data = fs.readFileSync('scripts/dynamodb/predictionBotData.json');
-const predictions = JSON.parse(data).map((x) => ({
+
+const data = fs.readFileSync('scripts/dataDump/predictionBotData.json');
+
+const Spinner = require('cli-spinner').Spinner;
+
+const spinner = new Spinner('processing.. %s');
+
+spinner.setSpinnerString('|/-\\');
+
+const predictions = JSON.parse(data).map((item) => ({
     'PutRequest': {
-        'Item': AWS.DynamoDB.Converter.unmarshall(x),
+        'Item': AWS.DynamoDB.Converter.unmarshall(item),
     },
 }));
 
-// console.log(JSON.stringify(predictions, null, 2));
+const batchIterator = (items, nextBatch) => {
 
-async.eachLimit(predictions, 1000, (row, nextBatch) => {
-    const batch = {
+    const params = {
         RequestItems: {
-            'mattDynamodbTest': [row],
+            'localPredictionBot': [items],
         },
     };
 
-    console.log(JSON.stringify(batch, null, 2));
-
-    docClient.batchWrite(batch, (err, res) => {
+    docClient.batchWrite(params, (err) => {
         if (err) {
             console.error('Unable to add Params. Error JSON:', JSON.stringify(err, null, 2));
         }
-        else {
-            console.log('PutItem succeeded:');
-            nextBatch(err, res);
-        }
+        nextBatch();
     });
-
-}, (err, res) => {
-    if (err) {
-        console.log(err);
-    }
-    if (res) {
-        console.log('were done!');
-    }
-});
-
-const params = {
-    RequestItems: {
-        'mattDynamodbTest': predictions,
-    },
 };
 
-console.log(predictions.length);
+const batchDone = (err) => {
+    spinner.stop(true);
+    if (err) {
+        console.log(JSON.stringify(err, null, 2));
+    }
+    console.log(`Were done! ${ predictions.length } items added.`);
+};
 
-// console.log(JSON.stringify(params, null, 2));
-
-// predictions.forEach((row) => {
-//
-//     const unmarshalled = AWS.DynamoDB.Converter.unmarshall(row);
-//
-//     const params = {
-//         RequestItems: {
-//             'mattDynamodbTest': [
-//                 {
-//                     'PutRequest': {
-//                         'Item': unmarshalled,
-//                     },
-//                 },
-//             ],
-//         },
-//     };
-//
-//     // console.log(JSON.stringify(params, null, 2));
-// });
-
-// docClient.batchWrite(params, (err, res) => {
-//     if (err) {
-//         console.error('Unable to add Params. Error JSON:', JSON.stringify(err, null, 2));
-//     }
-//     else {
-//         console.log('PutItem succeeded:');
-//     }
-// });
+spinner.start();
+async.eachLimit(predictions, 100, batchIterator, batchDone);

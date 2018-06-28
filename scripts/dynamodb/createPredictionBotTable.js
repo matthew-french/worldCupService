@@ -7,8 +7,7 @@ AWS.config.update({
 });
 const dynamodb = new AWS.DynamoDB();
 
-// scehma from dynamodump export-schema --region=eu-west-1 --table=PredictionBot --file=PredictionBot
-const params = require('./PredictionBot.json');
+const params = require('../dataDump/localPredictionBotSchema.json');
 
 dynamodb.createTable(params, (err, data) => {
     if (err) {

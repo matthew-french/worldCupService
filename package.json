@@ -8,6 +8,7 @@
   "license": "",
   "main": "app.js",
   "scripts": {
+    "setup": "./scripts/local_dev_start.sh",
     "start": "node app.js",
     "test": "swagger project test",
     "createdb": "cd ./scripts/dynamodb && node createPredictionBotTable.js && cd ../..",
@@ -19,6 +20,9 @@
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
+    "axios": "0.18.0",
+    "bluebird": "3.5.1",
+    "cli-spinner": "0.2.8",
     "dynamodb-marshaler": "2.0.0",
     "eslint": "5.0.0",
     "eslint-plugin-classes": "0.1.1",
