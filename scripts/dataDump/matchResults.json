@@ -687,15 +687,15 @@
         "id": 28,
         "name": "England",
         "region": "gb-eng",
-        "result": null
+        "result": 0
       },
       "team2": {
         "id": 25,
         "name": "Belgium",
         "region": "be",
-        "result": null
+        "result": 1
       },
-      "outcome": "draw"
+      "outcome": "belgium"
     },
     "match46": {
       "date": "2018-06-28T21:00:00+03:00",
@@ -704,15 +704,15 @@
         "id": 26,
         "name": "Panama",
         "region": "pa",
-        "result": null
+        "result": 1
       },
       "team2": {
         "id": 27,
         "name": "Tunisia",
         "region": "tn",
-        "result": null
+        "result": 2
       },
-      "outcome": "draw"
+      "outcome": "tunisia"
     },
     "match15": {
       "date": "2018-06-19T18:00:00+03:00",
@@ -789,15 +789,15 @@
         "id": 32,
         "name": "Japan",
         "region": "jp",
-        "result": null
+        "result": 0
       },
       "team2": {
         "id": 29,
         "name": "Poland",
         "region": "pl",
-        "result": null
+        "result": 1
       },
-      "outcome": "draw"
+      "outcome": "poland"
     },
     "match48": {
       "date": "2018-06-28T18:00:00+04:00",
@@ -806,15 +806,15 @@
         "id": 30,
         "name": "Senegal",
         "region": "sn",
-        "result": null
+        "result": 0
       },
       "team2": {
         "id": 31,
         "name": "Colombia",
         "region": "co",
-        "result": null
+        "result": 1
       },
-      "outcome": "draw"
+      "outcome": "colombia"
     }
   }
 }

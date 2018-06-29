@@ -17,6 +17,7 @@
   "dependencies": {
     "aws-sdk": "2.263.1",
     "express": "^4.12.3",
+    "jsonexport": "2.2.0",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "eslint-plugin-classes": "0.1.1",
     "eslint-plugin-promise": "3.8.0",
     "install": "0.12.1",
+    "json2csv": "4.1.5",
     "npm": "6.1.0",
     "should": "^7.1.0",
     "supertest": "^1.0.0"

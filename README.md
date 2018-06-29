@@ -21,3 +21,6 @@ https://medium.com/quick-code/node-js-restful-api-with-dynamodb-local-7e342a934a
 aws dynamodb batch-write-item --request-items file://scripts/dynamodb/predictionRow.json --endpoint-url http://localhost:8000
 
 aws dynamodb list-tables --endpoint-url http://localhost:8000
+
+
+https://www.npmjs.com/package/json2csv

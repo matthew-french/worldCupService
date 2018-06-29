@@ -1,6 +1,11 @@
 const AWS = require('aws-sdk');
 const matchResults = require('./dataDump/matchResults.json');
-const achievement = [];
+const achievementData = require('./dataDump/achievementData.json');
+
+const Spinner = require('cli-spinner').Spinner;
+const spinner = new Spinner('processing.. %s');
+
+const outputPath = 'dump.csv';
 
 AWS.config.update({
     region: 'eu-west-1',
@@ -11,30 +16,49 @@ AWS.config.update({
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
+// const fs = require('fs');
+
 const countCorrectGroupPredictions = (groupPredictions) => {
     let count = 0;
     Object.entries(matchResults.groupsPredictionResults).forEach(([key, value]) => {
-        if (key in groupPredictions) {
-            if (groupPredictions[key].outcome === value.outcome) {
-                count++;
+        if (groupPredictions) {
+            if (key in groupPredictions) {
+                if (groupPredictions[key].outcome === value.outcome) {
+                    count++;
+                }
             }
         }
-        console.log(`${key} ${value.outcome}`);
     });
-    console.log(groupPredictions);
     return count;
 };
+
+const fs = require('fs');
+const newLine = '\r\n';
+const fields = [
+    'userId',
+    'achievementId',
+    'rep',
+];
+
+fs.writeFile(outputPath, fields + newLine, (err, stat) => {
+    if (err) { throw err; }
+    console.log(`Init : A new file has been created at ${ outputPath }`);
+});
+
+spinner.start();
+
+let count = 0;
 
 const scanLogins = (callback) => {
 
     const params = {
         TableName: 'localPredictionBot',
-        Limit: 1,
         Select: 'ALL_ATTRIBUTES',
-
     };
 
     const scanData = () => {
+
+        let processedBatch = [];
 
         dynamodb.scan(params, (err, data) => {
 
@@ -42,34 +66,93 @@ const scanLogins = (callback) => {
                 return callback(err);
             }
             else if (data.LastEvaluatedKey) {
-                // console.log(data.Count);
-                // console.log(data.LastEvaluatedKey);
-                // console.log(data.ScannedCount);
-                // console.log(data.Items.length);
-                const groupAchiements = data.Items.reduce((current, next) => {
-                    current.push({ userId: next.userId });
-                    current.push({ totalCorrectGroupPredictions: countCorrectGroupPredictions(next.groupsPredictionData) });
-                    return current;
+                processedBatch = data.Items.reduce((current, next) => {
 
-                    // console.log(item.topScoringTeam);
-                    // console.log(item.groupsPredictionData);
-                    // console.log(item.totalYellows);
-                    // console.log(item.roundOf16);
-                    // console.log(item.winningTeam);
-                    // console.log(item.totalReds);
-                    // console.log(item.totalGoalsScored);
-                    // console.log(item.userId);
-                    // console.log(item.totalPenaltiesAwarded);
+                    const userId = next.userId;
+                    const totalCorrectGroupPredictions = countCorrectGroupPredictions(next.groupsPredictionData);
+                    const predictOneGroupMatch = (totalCorrectGroupPredictions >= 1);
+                    const predictEightGroupMatchs = (totalCorrectGroupPredictions >= 8);
+                    const predictSixteenGroupMatches = (totalCorrectGroupPredictions >= 16);
+                    const predictThirtyTwoGroupMatches = (totalCorrectGroupPredictions >= 32);
+                    const predictFortyEightGroupMatches = (totalCorrectGroupPredictions === 48);
+
+                    // const topScoringTeam = next.topScoringTeam;
+                    // const totalYellows = next.totalYellows;
+                    // const roundOf16 = next.roundOf16;
+                    // const winningTeam = next.winningTeam;
+                    // const totalReds = next.totalReds;
+                    // const totalGoalsScored = next.totalGoalsScored;
+                    // const totalPenaltiesAwarded = next.totalPenaltiesAwarded;
+
+                    // "predictOneGroupMatch": {
+                    //   "id": 18022,
+                    //   "rep": 100
+                    // },
+                    // "predictEightGroupMatchs": {
+                    //   "id": 18023,
+                    //   "rep": 700
+                    // },
+                    // "predictSixteenGroupMatches": {
+                    //   "id": 18024,
+                    //   "rep": 900
+                    // },
+                    // "predictThirtyTwoGroupMatches": {
+                    //   "id": 18025,
+                    //   "rep": 1300
+                    // },
+                    // "predictFortyEightGroupMatches": {
+                    //   "id": 18026,
+                    //   "rep": 3000
+                    // },
+
+                    const achievement = (type) => [
+                        userId,
+                        achievementData[type].id,
+                        achievementData[type].rep,
+                    ];
+
+                    if (predictOneGroupMatch) {
+                        current.push(achievement('predictOneGroupMatch'));
+                    }
+
+                    if (predictEightGroupMatchs) {
+                        current.push(achievement('predictEightGroupMatchs'));
+                    }
+
+                    if (predictSixteenGroupMatches) {
+                        current.push(achievement('predictSixteenGroupMatches'));
+                    }
+
+                    if (predictThirtyTwoGroupMatches) {
+                        current.push(achievement('predictThirtyTwoGroupMatches'));
+                    }
+
+                    if (predictFortyEightGroupMatches) {
+                        current.push(achievement('predictFortyEightGroupMatches'));
+                    }
+
+                    return current;
                 }, []);
 
-                console.log(groupAchiements);
+                const batch = processedBatch.join(newLine);
+                count = count + parseInt(data.Count);
+
+                fs.appendFile(outputPath, batch + newLine, (e) => {
+                    if (e) {
+                        throw e;
+                    }
+                    console.log(` Appended : ${ data.ScannedCount } items`);
+                    console.log('Total Items : ', count);
+                    console.log('Last Evaluated Key : ', data.LastEvaluatedKey);
+
+                });
 
                 params.ExclusiveStartKey = data.LastEvaluatedKey;
 
-                // return scanExecute(callback);
+                return scanData(callback);
             }
 
-            return callback(err, data.Items);
+            return callback(err, processedBatch);
 
         });
     };
@@ -77,12 +160,12 @@ const scanLogins = (callback) => {
     scanData(callback);
 };
 
+console.log(' Scan!');
 scanLogins((err, res) => {
     if (err) {
         console.log(err);
     }
-    console.log('Success');
-
-    // console.log(res);
+    console.log(' Complete!');
+    spinner.stop(true);
 }
 );
