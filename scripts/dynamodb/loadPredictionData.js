@@ -50,4 +50,5 @@ const batchDone = (err) => {
 };
 
 spinner.start();
+
 async.eachLimit(predictions, 100, batchIterator, batchDone);

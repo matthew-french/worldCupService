@@ -1,0 +1,29 @@
+{
+  "totalReds": 25,
+  "totalYellows": 160,
+  "totalGoalsScored": 180,
+  "totalPenaltiesAwarded": 28,
+  "roundOf16": [
+    "france",
+    "uruguay",
+    "russia",
+    "croatia",
+    "brazil",
+    "sweden",
+    "england"
+  ],
+  "quarters": [
+    "france",
+    "russia",
+    "england",
+    "brazil"
+  ],
+  "semis": [
+    "france",
+    "england"
+  ],
+  "final": [
+    "france"
+  ],
+  "winningTeam": "france"
+}

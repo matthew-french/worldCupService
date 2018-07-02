@@ -1,22 +1,27 @@
-const AWS = require('aws-sdk');
-const matchResults = require('./dataDump/matchResults.json');
-const achievementData = require('./dataDump/achievementData.json');
-
 const Spinner = require('cli-spinner').Spinner;
 const spinner = new Spinner('processing.. %s');
 
-const outputPath = 'dump.csv';
+const AWS = require('aws-sdk');
 
+// live db connection
 AWS.config.update({
     region: 'eu-west-1',
-    endpoint: 'http://localhost:8000',
-    accessKey: 'a',
-    secretKey: 'a',
 });
+
+// local db connection
+// AWS.config.update({
+//     region: 'eu-west-1',
+//     endpoint: 'http://localhost:8000',
+//     accessKey: 'a',
+//     secretKey: 'a',
+// });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-// const fs = require('fs');
+const matchResults = require('./dataDump/matchResults.json');
+const achievementData = require('./dataDump/achievementData.json');
+
+const outputPath = 'dump.csv';
 
 const countCorrectGroupPredictions = (groupPredictions) => {
     let count = 0;
@@ -52,7 +57,8 @@ let count = 0;
 const scanLogins = (callback) => {
 
     const params = {
-        TableName: 'localPredictionBot',
+        TableName: 'PredictionBot',
+        Limit: 500,
         Select: 'ALL_ATTRIBUTES',
     };
 
