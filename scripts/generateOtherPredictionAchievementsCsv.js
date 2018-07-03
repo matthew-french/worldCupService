@@ -1,4 +1,5 @@
 const _isEqual = require('lodash.isequal');
+const timestamp = require('time-stamp')('YYYYMMDD.HHMM');
 
 const fs = require('fs');
 const newLine = '\r\n';
@@ -19,7 +20,7 @@ AWS.config.update({
 });
 const params = {
     TableName: 'PredictionBot',
-    Limit: 10,
+    Limit: 1000,
     Select: 'ALL_ATTRIBUTES',
 };
 
@@ -29,6 +30,10 @@ const params = {
 //     endpoint: 'http://localhost:8000',
 //     accessKey: 'a',
 //     secretKey: 'a',
+//     maxRetries: 10,
+//     retryDelayOptions: {
+//         base: 1000,
+//     },
 // });
 // const params = {
 //     TableName: 'localPredictionBot',
@@ -38,38 +43,25 @@ const params = {
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const predictionResults = require('./dataDump/predictionResults.json');
-const achievementData = require('./dataDump/achievementData.json');
+const predictionResults = require('./results/predictionResults.json');
+const achievementData = require('./results/achievementData.json');
 
-const outputPath = 'scripts/dataDump/otherPredictionAchievments.csv';
-
-const countCorrectGroupPredictions = (groupPredictions) => {
-    let count = 0;
-    Object.entries(matchResults.groupsPredictionResults).forEach(([key, value]) => {
-        if (groupPredictions) {
-            if (key in groupPredictions) {
-                if (groupPredictions[key].outcome === value.outcome) {
-                    count++;
-                }
-            }
-        }
-    });
-    return count;
-};
+const outputPath = `scripts/data/otherPredictionAchievments.${ timestamp }.csv`;
 
 const fields = [
     'userId',
     'achievementId',
     'rep',
-    'bTotalReds',
-    'bTotalYellows',
-    'bTotalGoalsScored',
-    'bTotalPenaltiesAwarded',
-    'bRoundOf16',
-    'bQuarters',
-    'bSemis',
-    'bFinal',
-    'bWinningTeam',
+
+    // 'bTotalReds',
+    // 'bTotalYellows',
+    // 'bTotalGoalsScored',
+    // 'bTotalPenaltiesAwarded',
+    // 'bRoundOf16',
+    // 'bQuarters',
+    // 'bSemis',
+    // 'bFinal',
+    // 'bWinningTeam',
 ];
 
 fs.writeFile(outputPath, fields + newLine, (err, stat) => {
@@ -106,31 +98,32 @@ const scanLogins = (callback) => {
                     const bFinal = (_isEqual(next.final, predictionResults.final));
                     const bWinningTeam = (next.winningTeam === predictionResults.winningTeam);
 
-                    console.log(newLine + newLine);
-                    console.log({ userId });
-                    console.log({ bTotalReds }, next.totalReds, predictionResults.totalReds);
-                    console.log({ bTotalYellows }, next.totalYellows, predictionResults.totalYellows);
-                    console.log({ bTotalGoalsScored }, next.totalGoalsScored, predictionResults.totalGoalsScored);
-                    console.log({ bTotalPenaltiesAwarded }, next.totalPenaltiesAwarded, predictionResults.totalPenaltiesAwarded);
-                    console.log({ bRoundOf16 }, next.roundOf16, predictionResults.roundOf16);
-                    console.log({ bQuarters }, next.quarters, predictionResults.quarters);
-                    console.log({ bSemis }, next.semis, predictionResults.semis);
-                    console.log({ bFinal }, next.final, predictionResults.final);
-                    console.log({ bWinningTeam }, next.winningTeam, predictionResults.winningTeam);
+                    // console.log(newLine + newLine);
+                    // console.log({ userId });
+                    // console.log({ bTotalReds }, next.totalReds, predictionResults.totalReds);
+                    // console.log({ bTotalYellows }, next.totalYellows, predictionResults.totalYellows);
+                    // console.log({ bTotalGoalsScored }, next.totalGoalsScored, predictionResults.totalGoalsScored);
+                    // console.log({ bTotalPenaltiesAwarded }, next.totalPenaltiesAwarded, predictionResults.totalPenaltiesAwarded);
+                    // console.log({ bRoundOf16 }, next.roundOf16, predictionResults.roundOf16);
+                    // console.log({ bQuarters }, next.quarters, predictionResults.quarters);
+                    // console.log({ bSemis }, next.semis, predictionResults.semis);
+                    // console.log({ bFinal }, next.final, predictionResults.final);
+                    // console.log({ bWinningTeam }, next.winningTeam, predictionResults.winningTeam);
 
                     const achievement = (type) => [
                         userId,
                         achievementData[type].id,
                         achievementData[type].rep,
-                        bTotalReds,
-                        bTotalYellows,
-                        bTotalGoalsScored,
-                        bTotalPenaltiesAwarded,
-                        bRoundOf16,
-                        bQuarters,
-                        bSemis,
-                        bFinal,
-                        bWinningTeam,
+
+                        // bTotalReds,
+                        // bTotalYellows,
+                        // bTotalGoalsScored,
+                        // bTotalPenaltiesAwarded,
+                        // bRoundOf16,
+                        // bQuarters,
+                        // bSemis,
+                        // bFinal,
+                        // bWinningTeam,
                     ];
 
                     if (bTotalReds) {
@@ -179,7 +172,7 @@ const scanLogins = (callback) => {
                 params.ExclusiveStartKey = data.LastEvaluatedKey;
 
                 // Add delay to throttle request againt dynamoDb
-                // return setTimeout(() => scanData(callback), 1000);
+                return setTimeout(() => scanData(callback), 1000);
             }
 
             return callback(err, processedBatch);

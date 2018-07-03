@@ -1,10 +1,11 @@
 const _isEqual = require('lodash.isequal');
+const timestamp = require('time-stamp')('YYYYMMDD.HHMM');
 
 const fs = require('fs');
 const newLine = '\r\n';
 
 const Spinner = require('cli-spinner').Spinner;
-const spinner = new Spinner(`${ newLine }Scanning... %s`);
+const spinner = new Spinner('Scanning... %s');
 spinner.setSpinnerString(14);
 
 const AWS = require('aws-sdk');
@@ -29,6 +30,10 @@ const params = {
 //     endpoint: 'http://localhost:8000',
 //     accessKey: 'a',
 //     secretKey: 'a',
+//     maxRetries: 10,
+//     retryDelayOptions: {
+//         base: 1000,
+//     },
 // });
 // const params = {
 //     TableName: 'localPredictionBot',
@@ -37,10 +42,10 @@ const params = {
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const matchResults = require('./dataDump/groupResults.json');
-const achievementData = require('./dataDump/achievementData.json');
+const matchResults = require('./results/groupResults.json');
+const achievementData = require('./results/achievementData.json');
 
-const outputPath = 'scripts/dataDump/groupPredictionAchievments.csv';
+const outputPath = `scripts/data/groupPredictionAchievments.${ timestamp }.csv`;
 
 const countCorrectGroupPredictions = (groupPredictions) => {
     let count = 0;
@@ -97,35 +102,6 @@ const scanLogins = (callback) => {
                     const predictSixteenGroupMatches = (totalCorrectGroupPredictions >= 16);
                     const predictThirtyTwoGroupMatches = (totalCorrectGroupPredictions >= 32);
                     const predictFortyEightGroupMatches = (totalCorrectGroupPredictions === 48);
-
-                    // const topScoringTeam = next.topScoringTeam;
-                    // const totalYellows = next.totalYellows;
-                    // const roundOf16 = next.roundOf16;
-                    // const winningTeam = next.winningTeam;
-                    // const totalReds = next.totalReds;
-                    // const totalGoalsScored = next.totalGoalsScored;
-                    // const totalPenaltiesAwarded = next.totalPenaltiesAwarded;
-
-                    // "predictOneGroupMatch": {
-                    //   "id": 18022,
-                    //   "rep": 100
-                    // },
-                    // "predictEightGroupMatchs": {
-                    //   "id": 18023,
-                    //   "rep": 700
-                    // },
-                    // "predictSixteenGroupMatches": {
-                    //   "id": 18024,
-                    //   "rep": 900
-                    // },
-                    // "predictThirtyTwoGroupMatches": {
-                    //   "id": 18025,
-                    //   "rep": 1300
-                    // },
-                    // "predictFortyEightGroupMatches": {
-                    //   "id": 18026,
-                    //   "rep": 3000
-                    // },
 
                     const achievement = (type) => [
                         userId,

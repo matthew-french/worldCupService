@@ -7,7 +7,7 @@ AWS.config.update({
 });
 const dynamodb = new AWS.DynamoDB();
 
-const params = require('../dataDump/localPredictionBotSchema.json');
+const params = require('./localPredictionBotSchema.json');
 
 dynamodb.createTable(params, (err, data) => {
     if (err) {

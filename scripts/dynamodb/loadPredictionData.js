@@ -11,7 +11,7 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-const data = fs.readFileSync('scripts/dataDump/predictionBotData.json');
+const data = fs.readFileSync('scripts/dynamodb/predictionBotData.json');
 
 const Spinner = require('cli-spinner').Spinner;
 

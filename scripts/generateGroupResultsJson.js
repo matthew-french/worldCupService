@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
-const outFilePath = 'scripts/dataDump/groupResults.json';
+const outFilePath = 'scripts/results/groupResults.json';
 const url = 'https://raw.githubusercontent.com/lsv/fifa-worldcup-2018/master/data.json';
 
 const axios = require('axios');
