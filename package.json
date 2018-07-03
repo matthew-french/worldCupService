@@ -12,12 +12,10 @@
     "createdb": "cd ./scripts/dynamodb && node createPredictionBotTable.js && cd ../..",
     "loaddata": "cd ./scripts/dynamodb && node loadPredictionData.js && cd ../.."
   },
-  "dependencies": {
+  "devDependencies": {
     "aws-sdk": "2.263.1",
     "bluebird": "3.5.1",
-    "lodash.isequal": "4.5.0"
-  },
-  "devDependencies": {
+    "lodash.isequal": "4.5.0",
     "axios": "0.18.0",
     "cli-spinner": "0.2.8",
     "eslint": "5.0.0",
